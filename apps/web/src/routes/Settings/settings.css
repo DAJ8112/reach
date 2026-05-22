@@ -1,0 +1,238 @@
+.set-app {
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+.set-topbar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.set-back {
+  justify-self: start;
+  background: transparent;
+  border: 0;
+  color: var(--text-faint);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.set-back:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.set-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+}
+.set-wordmark-text {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text);
+}
+
+.set-topbar-right {
+  justify-self: end;
+  color: var(--text-faint);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.set-shell {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 28px;
+  gap: 32px;
+}
+
+.set-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: sticky;
+  top: 32px;
+  align-self: start;
+}
+
+.set-tab {
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: var(--text-faint);
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+}
+.set-tab:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+.set-tab.is-active {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.set-content {
+  min-width: 0;
+}
+
+.set-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.set-tab-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.set-tab-head h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.set-upload-wrap {
+  padding: 16px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.set-savebar {
+  position: sticky;
+  bottom: 0;
+  margin-top: 16px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.set-savebar-status {
+  color: var(--text-faint);
+  font-size: 13px;
+}
+.set-savebar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.set-btn,
+.set-btn-ghost,
+.set-btn-danger {
+  font: inherit;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.set-btn {
+  background: var(--accent);
+  color: var(--accent-text, #000);
+  border-color: var(--accent);
+}
+.set-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.set-btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border);
+}
+.set-btn-ghost:hover:not(:disabled) {
+  background: var(--surface);
+}
+.set-btn-ghost:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.set-btn-danger {
+  background: transparent;
+  color: #ff6b6b;
+  border-color: #ff6b6b;
+}
+.set-btn-danger:hover {
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.set-meta {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+.set-meta > div {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.set-meta dt {
+  color: var(--text-faint);
+  font-size: 13px;
+}
+.set-meta dd {
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.set-danger {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+.set-danger-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.set-danger-title {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+}
+.set-danger-sub {
+  color: var(--text-faint);
+  font-size: 13px;
+  margin-top: 2px;
+}
+.set-danger-actions {
+  display: flex;
+  gap: 8px;
+}

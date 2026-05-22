@@ -1,0 +1,868 @@
+/* Onboarding — ported from design-handoff/project/onboarding.css */
+
+/* ===== Shell ===== */
+.ob-app {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.ob-app[data-theme='dark']::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 0%, oklch(0.78 0.12 165 / 0.04), transparent 55%),
+    radial-gradient(circle at 50% 50%, transparent 0, var(--bg) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ob-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 18px 28px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--field-border);
+}
+.ob-wordmark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+}
+.ob-wordmark-text {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 500;
+  color: var(--text);
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.ob-progress {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background: var(--bg-elev);
+  border: 1px solid var(--field-border);
+  border-radius: 4px;
+}
+.ob-progress-seg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-faint);
+  transition: all 320ms var(--ease);
+}
+.ob-progress-num {
+  font-size: 10px;
+  opacity: 0.7;
+}
+.ob-progress-label {
+  text-transform: uppercase;
+}
+.ob-progress-seg.done {
+  color: var(--text-dim);
+}
+.ob-progress-seg.done .ob-progress-num {
+  color: var(--accent);
+  opacity: 1;
+}
+.ob-progress-seg.current {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.ob-progress-seg.current .ob-progress-num {
+  color: var(--accent);
+  opacity: 1;
+}
+.ob-topbar-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.ob-step-count {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  text-transform: uppercase;
+}
+
+.ob-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 56px 28px 120px;
+  position: relative;
+  z-index: 2;
+}
+.ob-stage {
+  width: 100%;
+  max-width: 720px;
+  animation: stage-in 480ms var(--spring) both;
+}
+@keyframes stage-in {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.step-content-wide {
+  gap: 18px;
+}
+.step-header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.step-eyebrow {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+}
+.step-title {
+  font-size: 32px;
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-wrap: pretty;
+}
+.step-sub {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-dim);
+  max-width: 580px;
+  text-wrap: pretty;
+}
+
+.ob-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 28px;
+  background: var(--bg);
+  border-top: 1px solid var(--field-border);
+  z-index: 5;
+}
+.ob-footer-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* Buttons */
+.btn {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition:
+    all 200ms var(--ease),
+    transform 200ms var(--spring);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #0a0b0a;
+  font-weight: 600;
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text-dim);
+  border-color: var(--field-border);
+}
+.btn-ghost:hover {
+  background: var(--bg-elev);
+  color: var(--text);
+}
+.btn-text {
+  background: transparent;
+  color: var(--text-faint);
+  border: 0;
+}
+.btn-text:hover {
+  color: var(--text-dim);
+}
+
+/* ===== STEP 1: Upload ===== */
+.dropzone {
+  border: 1.5px dashed var(--field-border);
+  border-radius: 6px;
+  padding: 56px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  background: var(--bg-elev);
+  transition: all 240ms var(--ease);
+}
+.dropzone:hover,
+.dropzone.is-over {
+  border-color: var(--accent);
+  background: var(--accent-fade);
+}
+.dropzone.is-done {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--accent-fade);
+  cursor: default;
+}
+.dropzone-icon {
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+.dropzone.is-done .dropzone-icon {
+  color: var(--accent);
+}
+.dropzone-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--text);
+}
+.dropzone-sub {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+.link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.parsing-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--field-border);
+  border-radius: 6px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.parsing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.parsing-name {
+  font-family: 'Geist Mono', monospace;
+  font-size: 13px;
+  color: var(--text);
+}
+.parsing-pct {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 500;
+}
+.progress-bar {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg-elev-2);
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 200ms var(--ease);
+}
+.parsing-status {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+}
+
+/* ===== STEP 2: Review ===== */
+.ob-section {
+  background: var(--bg-elev);
+  border: 1px solid var(--field-border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.ob-section-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  color: var(--text);
+}
+.ob-section-head:hover {
+  background: var(--bg-elev-2);
+}
+.ob-section-chevron {
+  color: var(--text-faint);
+  font-size: 11px;
+  width: 12px;
+  display: inline-block;
+}
+.ob-section-title {
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.ob-section-count {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  background: var(--bg-elev-2);
+  padding: 2px 7px;
+  border-radius: 3px;
+}
+.ob-section-spacer {
+  flex: 1;
+}
+.ob-section-body {
+  padding: 16px 16px 18px 38px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 1px solid var(--field-border);
+}
+
+.ob-add-link {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+.ob-add-link:hover {
+  text-decoration: underline;
+}
+.ob-add-link.inline {
+  padding: 4px 0;
+  align-self: flex-start;
+}
+
+.ob-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 16px;
+}
+.ob-grid-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.ob-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ob-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ob-optional {
+  font-size: 9.5px;
+  color: var(--text-faint);
+  text-transform: lowercase;
+  font-weight: 400;
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+}
+
+.ob-input {
+  width: 100%;
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  border-radius: 3px;
+  padding: 9px 11px;
+  color: var(--text);
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  outline: 0;
+  transition:
+    border-color 200ms var(--ease),
+    box-shadow 200ms var(--ease);
+}
+.ob-input::placeholder {
+  color: var(--placeholder);
+}
+.ob-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.ob-textarea {
+  resize: none;
+  overflow: hidden;
+  min-height: 36px;
+}
+
+.ob-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ob-card {
+  background: var(--bg-elev-2);
+  border: 1px solid var(--field-border);
+  border-radius: 4px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ob-card-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.ob-card-head > .ob-grid-2,
+.ob-card-head > .ob-grid-1 {
+  flex: 1;
+}
+.ob-card-remove {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  border: 1px solid var(--field-border);
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 16px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+.ob-card-remove:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--bg-elev);
+}
+
+.ob-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--field-border);
+}
+.ob-bullet {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding-top: 4px;
+}
+.ob-bullet-dot {
+  font-family: 'Geist Mono', monospace;
+  color: var(--accent);
+  padding-top: 8px;
+  flex: none;
+}
+.ob-bullet > .ob-field {
+  flex: 1;
+}
+
+.ob-row-input {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.ob-row-input .ob-input {
+  flex: 1;
+}
+
+/* Tags */
+.ob-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 0;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  border: 1px solid var(--field-border);
+  background: var(--bg-elev-2);
+  color: var(--text);
+  transition: all 200ms var(--ease);
+}
+.tag.is-on {
+  background: var(--accent-fade);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.tag.is-on:hover {
+  background: var(--accent-soft);
+}
+.tag.is-suggest {
+  background: transparent;
+  color: var(--text-dim);
+  border-style: dashed;
+}
+.tag.is-suggest:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  border-style: solid;
+}
+.tag-x {
+  color: var(--text-faint);
+  font-size: 12px;
+}
+.tag-input {
+  background: transparent;
+  border: 1px dashed var(--field-border);
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  color: var(--text);
+  outline: 0;
+  min-width: 140px;
+}
+.tag-input:focus {
+  border-color: var(--accent);
+  border-style: solid;
+}
+.tag-input::placeholder {
+  color: var(--placeholder);
+}
+
+.ob-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--field-border);
+}
+.ob-suggestions-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10.5px;
+  color: var(--text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 4px;
+}
+
+/* ===== STEP 3: Achievements ===== */
+.ach-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ach-card {
+  background: var(--bg-elev);
+  border: 1px solid var(--field-border);
+  border-radius: 5px;
+  padding: 14px 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition:
+    border-color 240ms var(--ease),
+    box-shadow 240ms var(--ease);
+}
+.ach-card:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.ach-num {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+  padding-top: 10px;
+  flex: none;
+}
+.ach-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ach-title-input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font-family: 'Geist', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 6px 0;
+}
+.ach-title-input::placeholder {
+  color: var(--placeholder);
+}
+.ach-fields .ob-input {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 13.5px;
+  color: var(--text-dim);
+}
+.ach-fields .ob-input:focus {
+  box-shadow: none;
+}
+.ach-remove {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 3px;
+  border: 1px solid var(--field-border);
+  background: transparent;
+  color: var(--text-faint);
+  font-size: 16px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+.ach-remove:hover {
+  color: var(--text);
+}
+
+.ob-add-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  background: transparent;
+  border: 1px dashed var(--field-border);
+  border-radius: 5px;
+  color: var(--text-dim);
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  transition: all 200ms var(--ease);
+}
+.ob-add-card:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.ob-add-card-meta {
+  margin-left: 10px;
+  color: var(--text-faint);
+  font-size: 11px;
+}
+
+/* ===== STEP 4: Links ===== */
+.links-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.link-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-elev);
+  border: 1px solid var(--field-border);
+  border-radius: 5px;
+  padding: 10px 14px;
+  transition:
+    border-color 240ms var(--ease),
+    box-shadow 240ms var(--ease);
+}
+.link-row:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.link-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 3px;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--field-border);
+  display: grid;
+  place-items: center;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  flex: none;
+}
+.link-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.link-meta-custom {
+  gap: 4px;
+}
+.link-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+.link-input,
+.link-custom-label {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  padding: 2px 0;
+}
+.link-custom-label {
+  font-size: 12px;
+  font-family: 'Geist Mono', monospace;
+  color: var(--text-dim);
+  text-transform: lowercase;
+}
+.link-input::placeholder,
+.link-custom-label::placeholder {
+  color: var(--placeholder);
+}
+
+/* ===== STEP 5: Welcome ===== */
+.welcome-stage {
+  align-items: center;
+  text-align: center;
+  padding-top: 32px;
+  gap: 14px;
+}
+.welcome-mark {
+  color: var(--accent);
+  margin-bottom: 8px;
+  animation: welcome-pop 720ms var(--spring) both;
+}
+@keyframes welcome-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.welcome-eyebrow {
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--accent);
+  font-weight: 500;
+}
+.welcome-title {
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--text);
+}
+.welcome-sub {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-dim);
+  max-width: 480px;
+  text-wrap: pretty;
+}
+.welcome-summary-spacer {
+  height: 16px;
+}
+.welcome-cta {
+  height: 44px;
+  padding: 0 22px;
+  font-size: 14px;
+}
+.welcome-hint {
+  margin-top: 8px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 720px) {
+  .ob-progress {
+    display: none;
+  }
+  .ob-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .step-title {
+    font-size: 26px;
+  }
+  .welcome-title {
+    font-size: 32px;
+  }
+}
