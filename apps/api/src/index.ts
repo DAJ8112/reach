@@ -5,6 +5,7 @@ import { env } from './lib/env.js';
 import { profileRouter } from './routes/profile.js';
 import { jdRouter } from './routes/jd.js';
 import { generateRouter } from './routes/generate.js';
+import { generationsRouter } from './routes/generations.js';
 
 const app = express();
 app.use(cors({ origin: env.WEB_ORIGIN, credentials: true }));
@@ -17,6 +18,7 @@ app.get('/health', (_req, res) => {
 app.use('/api/profile', profileRouter);
 app.use('/api/jd', jdRouter);
 app.use('/api/generate', generateRouter);
+app.use('/api/generations', generationsRouter);
 
 app.listen(env.PORT, () => {
   console.log(`[reach-api] listening on http://localhost:${env.PORT}`);

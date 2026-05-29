@@ -1,5 +1,5 @@
 import { api, ApiError } from '../../lib/api.js';
-import type { EmailDraft } from '@reach/shared';
+import type { EmailDraft, Generation } from '@reach/shared';
 
 export type GenerateInput = {
   jobUrl?: string;
@@ -9,13 +9,15 @@ export type GenerateInput = {
   ask: string;
 };
 
+export type GenerateResponse = EmailDraft & { generation: Generation | null };
+
 export type GenerateError =
   | { kind: 'needs_manual'; code: string }
   | { kind: 'failed'; code: string };
 
-export async function generateDraft(input: GenerateInput): Promise<EmailDraft> {
+export async function generateDraft(input: GenerateInput): Promise<GenerateResponse> {
   try {
-    return await api<EmailDraft>('/api/generate', { method: 'POST', body: input });
+    return await api<GenerateResponse>('/api/generate', { method: 'POST', body: input });
   } catch (e) {
     if (e instanceof ApiError && e.status === 422) {
       const detail = e.detail as { needs_manual?: boolean; error?: string } | null;
@@ -28,4 +30,12 @@ export async function generateDraft(input: GenerateInput): Promise<EmailDraft> {
     const err: GenerateError = { kind: 'failed', code };
     throw err;
   }
+}
+
+export function listGenerations(): Promise<Generation[]> {
+  return api<Generation[]>('/api/generations');
+}
+
+export async function deleteGeneration(id: string): Promise<void> {
+  await api<{ ok: true }>(`/api/generations/${id}`, { method: 'DELETE' });
 }
