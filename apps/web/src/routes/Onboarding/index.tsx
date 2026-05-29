@@ -102,7 +102,7 @@ export function Onboarding({
   };
 
   return (
-    <div className="ob-app font-sans" data-theme={document.documentElement.dataset.theme ?? 'dark'}>
+    <div className="ob-app font-sans">
       <header className="ob-topbar">
         <div className="ob-wordmark">
           <Mark size={18} />

@@ -26,7 +26,7 @@
   border-radius: 6px;
 }
 .set-back:hover {
-  background: var(--surface);
+  background: var(--bg-elev);
   color: var(--text);
 }
 
@@ -82,11 +82,11 @@
   font-size: 14px;
 }
 .set-tab:hover {
-  background: var(--surface);
+  background: var(--bg-elev);
   color: var(--text);
 }
 .set-tab.is-active {
-  background: var(--surface);
+  background: var(--bg-elev);
   color: var(--text);
   font-weight: 500;
 }
@@ -119,7 +119,7 @@
   padding: 16px;
   border: 1px dashed var(--border);
   border-radius: 12px;
-  background: var(--surface);
+  background: var(--bg-elev);
 }
 
 .set-savebar {
@@ -168,7 +168,7 @@
   border-color: var(--border);
 }
 .set-btn-ghost:hover:not(:disabled) {
-  background: var(--surface);
+  background: var(--bg-elev);
 }
 .set-btn-ghost:disabled {
   opacity: 0.4;
@@ -220,7 +220,7 @@
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--surface);
+  background: var(--bg-elev);
 }
 .set-danger-title {
   color: var(--text);

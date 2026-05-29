@@ -57,7 +57,7 @@ export function Settings({
   const [tab, setTab] = useState<Tab>('profile');
 
   return (
-    <div className="set-app font-sans" data-theme="dark">
+    <div className="set-app font-sans">
       <header className="set-topbar">
         <button className="set-back" onClick={onBack}>
           ← Back

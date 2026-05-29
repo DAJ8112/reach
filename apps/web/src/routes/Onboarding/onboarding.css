@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
 }
-.ob-app[data-theme='dark']::before {
+html[data-theme='dark'] .ob-app::before {
   content: '';
   position: fixed;
   inset: 0;

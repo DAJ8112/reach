@@ -8,7 +8,7 @@
   flex-direction: column;
   overflow: hidden;
 }
-.gen-app[data-theme='dark']::before {
+html[data-theme='dark'] .gen-app::before {
   content: '';
   position: fixed;
   inset: 0;

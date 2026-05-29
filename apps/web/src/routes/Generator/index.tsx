@@ -9,6 +9,7 @@ import { EmailDraft } from './EmailDraft.js';
 import { generateDraft, type GenerateError } from './api.js';
 import { toast } from '../../lib/toast.js';
 import { friendlyError } from '../../lib/errorMessages.js';
+import { useTheme } from '../../lib/theme.js';
 import './generator.css';
 
 type Phase = 'input' | 'loading' | 'email';
@@ -16,6 +17,7 @@ type Phase = 'input' | 'loading' | 'email';
 type Values = { url: string; role: string; context: string; ask: string };
 
 export function Generator({ profile: _profile, onReset: _onReset }: { profile: Profile; onReset: () => void }) {
+  const { theme, toggleTheme } = useTheme();
   const [values, setValues] = useState<Values>({ url: '', role: '', context: '', ask: '' });
   const [pasteMode, setPasteMode] = useState(false);
   const [stepIndex, setStepIndex] = useState(0);
@@ -81,10 +83,7 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
   }
 
   return (
-    <div
-      className={`gen-app ${isStackedPhase ? 'phase-stacked' : 'phase-input'} font-sans`}
-      data-theme="dark"
-    >
+    <div className={`gen-app ${isStackedPhase ? 'phase-stacked' : 'phase-input'} font-sans`}>
       <header className={`brand-bar ${brandSmall ? 'brand-small' : 'brand-large'}`}>
         <span className="text-accent">
           <Wordmark size={brandSmall ? 'sm' : 'lg'} />
@@ -94,6 +93,7 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
       <div className="gen-menu">
         <button onClick={restartFlow}>New email</button>
         <button onClick={() => navigate('/settings')}>Settings</button>
+        <button onClick={toggleTheme}>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</button>
       </div>
 
       {!isStackedPhase ? (
