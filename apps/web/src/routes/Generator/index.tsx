@@ -7,7 +7,13 @@ import { ActiveInput, StackedInput } from './InputRow.js';
 import { Loading } from './Loading.js';
 import { EmailDraft } from './EmailDraft.js';
 import { HistorySidebar } from './HistorySidebar.js';
-import { generateDraft, listGenerations, deleteGeneration, type GenerateError } from './api.js';
+import {
+  generateDraft,
+  listGenerations,
+  deleteGeneration,
+  updateGeneration,
+  type GenerateError,
+} from './api.js';
 import { toast } from '../../lib/toast.js';
 import { friendlyError } from '../../lib/errorMessages.js';
 import { useTheme } from '../../lib/theme.js';
@@ -122,6 +128,26 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
     } catch {
       setHistory(prev);
       toast.error('Could not delete email');
+    }
+  }
+
+  function editDraft(patch: Partial<{ subject: string; body: string }>) {
+    setDraft((d) => ({ ...d, ...patch }));
+    if (selectedId) {
+      setHistory((h) => h.map((g) => (g.id === selectedId ? { ...g, ...patch } : g)));
+    }
+  }
+
+  async function persistDraft() {
+    if (!selectedId) return;
+    try {
+      const saved = await updateGeneration(selectedId, {
+        subject: draft.subject,
+        body: draft.body,
+      });
+      setHistory((h) => h.map((g) => (g.id === saved.id ? saved : g)));
+    } catch {
+      toast.error('Could not save changes');
     }
   }
 
@@ -268,8 +294,9 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
               <EmailDraft
                 subject={draft.subject}
                 body={draft.body}
-                onChangeSubject={(v) => setDraft({ ...draft, subject: v })}
-                onChangeBody={(v) => setDraft({ ...draft, body: v })}
+                onChangeSubject={(v) => editDraft({ subject: v })}
+                onChangeBody={(v) => editDraft({ body: v })}
+                onBlur={() => void persistDraft()}
                 onRegenerate={() => void generate()}
                 regenerating={regenerating}
               />

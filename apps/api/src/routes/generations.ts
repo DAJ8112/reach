@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { z } from 'zod';
 import { requireAuth } from '../middleware/auth.js';
 import { supabaseAdmin } from '../lib/supabase.js';
 import type { Generation } from '@reach/shared';
@@ -46,6 +47,43 @@ generationsRouter.get('/', async (req, res) => {
     return;
   }
   res.json((data as GenerationRow[]).map(rowToGeneration));
+});
+
+const PatchBody = z
+  .object({
+    subject: z.string().max(500).optional(),
+    body: z.string().max(20000).optional(),
+  })
+  .refine((b) => b.subject !== undefined || b.body !== undefined, {
+    message: 'subject_or_body_required',
+  });
+
+generationsRouter.patch('/:id', async (req, res) => {
+  const parsed = PatchBody.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: 'invalid_body', issues: parsed.error.issues });
+    return;
+  }
+  const patch: Record<string, string> = {};
+  if (parsed.data.subject !== undefined) patch.subject = parsed.data.subject;
+  if (parsed.data.body !== undefined) patch.body = parsed.data.body;
+
+  const { data, error } = await supabaseAdmin
+    .from('generations')
+    .update(patch)
+    .eq('id', req.params.id)
+    .eq('user_id', req.userId!)
+    .select('*')
+    .single();
+  if (error) {
+    res.status(500).json({ error: 'db_error', detail: error.message });
+    return;
+  }
+  if (!data) {
+    res.status(404).json({ error: 'not_found' });
+    return;
+  }
+  res.json(rowToGeneration(data as GenerationRow));
 });
 
 generationsRouter.delete('/:id', async (req, res) => {

@@ -6,6 +6,7 @@ type Props = {
   body: string;
   onChangeSubject: (v: string) => void;
   onChangeBody: (v: string) => void;
+  onBlur?: () => void;
   onRegenerate: () => void;
   regenerating: boolean;
 };
@@ -15,6 +16,7 @@ export function EmailDraft({
   body,
   onChangeSubject,
   onChangeBody,
+  onBlur,
   onRegenerate,
   regenerating,
 }: Props) {
@@ -66,6 +68,7 @@ export function EmailDraft({
           className="email-subject"
           value={subject}
           onChange={(e) => onChangeSubject(e.target.value)}
+          onBlur={onBlur}
           spellCheck={false}
         />
       </div>
@@ -76,6 +79,7 @@ export function EmailDraft({
           className="email-body"
           value={body}
           onChange={(e) => onChangeBody(e.target.value)}
+          onBlur={onBlur}
           spellCheck={false}
         />
       </div>

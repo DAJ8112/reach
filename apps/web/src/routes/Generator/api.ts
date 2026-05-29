@@ -36,6 +36,13 @@ export function listGenerations(): Promise<Generation[]> {
   return api<Generation[]>('/api/generations');
 }
 
+export function updateGeneration(
+  id: string,
+  patch: { subject?: string; body?: string },
+): Promise<Generation> {
+  return api<Generation>(`/api/generations/${id}`, { method: 'PATCH', body: patch });
+}
+
 export async function deleteGeneration(id: string): Promise<void> {
   await api<{ ok: true }>(`/api/generations/${id}`, { method: 'DELETE' });
 }

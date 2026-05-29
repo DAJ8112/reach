@@ -98,4 +98,8 @@ drop policy if exists "generations_delete_own" on public.generations;
 create policy "generations_delete_own" on public.generations
   for delete using (auth.uid() = user_id);
 
+drop policy if exists "generations_update_own" on public.generations;
+create policy "generations_update_own" on public.generations
+  for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
 -- v0.1: writes happen server-side with service role key, no client insert policy needed.
