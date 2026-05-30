@@ -6,6 +6,7 @@ import { extractJd, JdExtractError } from '../lib/jdExtract.js';
 import { generateEmail } from '../llm/generateEmail.js';
 import { ProfileSchema, type Profile } from '@reach/shared';
 import { MODEL } from '../llm/anthropic.js';
+import { rowToGeneration, type GenerationRow } from './generations.js';
 
 export const generateRouter = Router();
 generateRouter.use(requireAuth);
@@ -105,20 +106,28 @@ generateRouter.post('/', async (req, res) => {
   }
 
   // Persist (best effort — do not block return on a write failure).
-  const { error: insertError } = await supabaseAdmin.from('generations').insert({
-    user_id: req.userId!,
-    job_url: b.jobUrl ?? null,
-    job_text: jobText,
-    recipient_role: b.recipientRole,
-    recipient_context: b.recipientContext ?? null,
-    ask: b.ask,
-    subject: draft.subject,
-    body: draft.body,
-    model: MODEL,
-  });
+  const { data: inserted, error: insertError } = await supabaseAdmin
+    .from('generations')
+    .insert({
+      user_id: req.userId!,
+      job_url: b.jobUrl ?? null,
+      job_text: jobText,
+      recipient_role: b.recipientRole,
+      recipient_context: b.recipientContext ?? null,
+      ask: b.ask,
+      subject: draft.subject,
+      body: draft.body,
+      model: MODEL,
+    })
+    .select('*')
+    .single();
   if (insertError) {
     console.warn('[generate] insert failed:', insertError.message);
   }
 
-  res.json({ subject: draft.subject, body: draft.body });
+  res.json({
+    subject: draft.subject,
+    body: draft.body,
+    generation: inserted ? rowToGeneration(inserted as GenerationRow) : null,
+  });
 });

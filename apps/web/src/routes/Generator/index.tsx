@@ -1,12 +1,19 @@
-import { useState } from 'react';
-import type { Profile } from '@reach/shared';
+import { useEffect, useState } from 'react';
+import type { Generation, Profile } from '@reach/shared';
 import { Wordmark } from '../../components/Wordmark.js';
 import { navigate } from '../../lib/route.js';
 import { STEPS } from './steps.js';
 import { ActiveInput, StackedInput } from './InputRow.js';
 import { Loading } from './Loading.js';
 import { EmailDraft } from './EmailDraft.js';
-import { generateDraft, type GenerateError } from './api.js';
+import { HistorySidebar } from './HistorySidebar.js';
+import {
+  generateDraft,
+  listGenerations,
+  deleteGeneration,
+  updateGeneration,
+  type GenerateError,
+} from './api.js';
 import { toast } from '../../lib/toast.js';
 import { friendlyError } from '../../lib/errorMessages.js';
 import { useTheme } from '../../lib/theme.js';
@@ -25,9 +32,18 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
   const [phase, setPhase] = useState<Phase>('input');
   const [draft, setDraft] = useState({ subject: '', body: '' });
   const [regenerating, setRegenerating] = useState(false);
+  const [history, setHistory] = useState<Generation[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const isStackedPhase = stepIndex >= STEPS.length;
   const brandSmall = isStackedPhase || stepIndex > 0;
+
+  useEffect(() => {
+    listGenerations()
+      .then(setHistory)
+      .catch(() => {});
+  }, []);
 
   function submitStep() {
     if (editingKey) {
@@ -52,7 +68,11 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
         recipientContext: values.context || undefined,
         ask: values.ask,
       });
-      setDraft(out);
+      setDraft({ subject: out.subject, body: out.body });
+      if (out.generation) {
+        setHistory((prev) => [out.generation!, ...prev]);
+        setSelectedId(out.generation.id);
+      }
       setPhase('email');
       toast.success('Draft ready');
     } catch (e) {
@@ -80,6 +100,55 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
     setDraft({ subject: '', body: '' });
     setEditingKey(null);
     setPasteMode(false);
+    setSelectedId(null);
+  }
+
+  function selectGeneration(g: Generation) {
+    setValues({
+      url: g.jobUrl ?? g.jobText,
+      role: g.recipientRole,
+      context: g.recipientContext ?? '',
+      ask: g.ask,
+    });
+    setPasteMode(g.jobUrl == null);
+    setDraft({ subject: g.subject, body: g.body });
+    setEditingKey(null);
+    setStepIndex(STEPS.length);
+    setPhase('email');
+    setSelectedId(g.id);
+    setHistoryOpen(false);
+  }
+
+  async function removeGeneration(id: string) {
+    const prev = history;
+    setHistory((h) => h.filter((g) => g.id !== id));
+    if (selectedId === id) setSelectedId(null);
+    try {
+      await deleteGeneration(id);
+    } catch {
+      setHistory(prev);
+      toast.error('Could not delete email');
+    }
+  }
+
+  function editDraft(patch: Partial<{ subject: string; body: string }>) {
+    setDraft((d) => ({ ...d, ...patch }));
+    if (selectedId) {
+      setHistory((h) => h.map((g) => (g.id === selectedId ? { ...g, ...patch } : g)));
+    }
+  }
+
+  async function persistDraft() {
+    if (!selectedId) return;
+    try {
+      const saved = await updateGeneration(selectedId, {
+        subject: draft.subject,
+        body: draft.body,
+      });
+      setHistory((h) => h.map((g) => (g.id === saved.id ? saved : g)));
+    } catch {
+      toast.error('Could not save changes');
+    }
   }
 
   return (
@@ -95,6 +164,27 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
         <button onClick={() => navigate('/settings')}>Settings</button>
         <button onClick={toggleTheme}>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</button>
       </div>
+
+      <button
+        className={`history-toggle ${historyOpen ? 'hidden' : ''}`}
+        onClick={() => setHistoryOpen(true)}
+        aria-label="Open history"
+      >
+        <span className="history-toggle-icon" aria-hidden>
+          <span />
+          <span />
+          <span />
+        </span>
+      </button>
+
+      <HistorySidebar
+        open={historyOpen}
+        items={history}
+        selectedId={selectedId}
+        onClose={() => setHistoryOpen(false)}
+        onSelect={selectGeneration}
+        onDelete={removeGeneration}
+      />
 
       {!isStackedPhase ? (
         <main className="center-stage">
@@ -204,8 +294,9 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
               <EmailDraft
                 subject={draft.subject}
                 body={draft.body}
-                onChangeSubject={(v) => setDraft({ ...draft, subject: v })}
-                onChangeBody={(v) => setDraft({ ...draft, body: v })}
+                onChangeSubject={(v) => editDraft({ subject: v })}
+                onChangeBody={(v) => editDraft({ body: v })}
+                onBlur={() => void persistDraft()}
                 onRegenerate={() => void generate()}
                 regenerating={regenerating}
               />

@@ -21,3 +21,17 @@ export const JdExtractResponseSchema = z.object({
   content: z.string(),
 });
 export type JdExtractResponse = z.infer<typeof JdExtractResponseSchema>;
+
+export const GenerationSchema = z.object({
+  id: z.string(),
+  jobUrl: z.string().nullable(),
+  jobText: z.string(),
+  recipientRole: z.string(),
+  recipientContext: z.string().nullable(),
+  ask: z.string(),
+  subject: z.string(),
+  body: z.string(),
+  model: z.string().nullable(),
+  createdAt: z.string(),
+});
+export type Generation = z.infer<typeof GenerationSchema>;
