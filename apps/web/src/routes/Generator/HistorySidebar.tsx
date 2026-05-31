@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { Generation } from '@reach/shared';
 
 function relativeTime(iso: string): string {
@@ -11,6 +12,26 @@ function relativeTime(iso: string): string {
   const day = Math.round(hr / 24);
   if (day < 7) return `${day}d ago`;
   return new Date(iso).toLocaleDateString();
+}
+
+function TrashIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m2 0v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V6h12Z"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 11v6M14 11v6"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
 }
 
 export function HistorySidebar({
@@ -28,6 +49,12 @@ export function HistorySidebar({
   onSelect: (g: Generation) => void;
   onDelete: (id: string) => void;
 }) {
+  const [confirmingId, setConfirmingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!open) setConfirmingId(null);
+  }, [open]);
+
   return (
     <>
       {open && <div className="history-backdrop" onClick={onClose} aria-hidden />}
@@ -46,7 +73,7 @@ export function HistorySidebar({
             {items.map((g) => (
               <li
                 key={g.id}
-                className={`history-item ${g.id === selectedId ? 'selected' : ''}`}
+                className={`history-item ${g.id === selectedId ? 'selected' : ''} ${confirmingId === g.id ? 'confirming' : ''}`}
                 onClick={() => onSelect(g)}
               >
                 <div className="history-item-main">
@@ -59,11 +86,44 @@ export function HistorySidebar({
                   aria-label="Delete email"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onDelete(g.id);
+                    setConfirmingId(g.id);
                   }}
                 >
-                  ×
+                  <TrashIcon />
                 </button>
+                {confirmingId === g.id && (
+                  <div
+                    className="history-confirm"
+                    role="dialog"
+                    aria-label="Confirm delete"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="history-confirm-label">Delete?</span>
+                    <div className="history-confirm-actions">
+                      <button
+                        type="button"
+                        className="history-confirm-cancel"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setConfirmingId(null);
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        className="history-confirm-delete"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onDelete(g.id);
+                          setConfirmingId(null);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
