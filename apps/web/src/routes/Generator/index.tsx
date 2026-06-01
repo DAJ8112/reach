@@ -23,6 +23,34 @@ type Phase = 'input' | 'loading' | 'email';
 
 type Values = { url: string; role: string; context: string; ask: string };
 
+function SunIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.75" />
+      <path
+        d="M12 2v2.5M12 19.5V22M4.22 4.22l1.77 1.77M18.01 18.01l1.77 1.77M2 12h2.5M19.5 12H22M4.22 19.78l1.77-1.77M18.01 5.99l1.77-1.77"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function Generator({ profile: _profile, onReset: _onReset }: { profile: Profile; onReset: () => void }) {
   const { theme, toggleTheme } = useTheme();
   const [values, setValues] = useState<Values>({ url: '', role: '', context: '', ask: '' });
@@ -162,7 +190,14 @@ export function Generator({ profile: _profile, onReset: _onReset }: { profile: P
       <div className="gen-menu">
         <button onClick={restartFlow}>New email</button>
         <button onClick={() => navigate('/settings')}>Settings</button>
-        <button onClick={toggleTheme}>{theme === 'dark' ? 'Light mode' : 'Dark mode'}</button>
+        <button
+          className="gen-menu-icon"
+          onClick={toggleTheme}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+        >
+          {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+        </button>
       </div>
 
       <button
